@@ -9,5 +9,6 @@ namespace BookHundred.Data.Repositories
         Task<Book> GetBook(int id);
         Task<BookResult> GetBooksAsync(int page, int limit, string? searchTerm, string? languages, string? sortColumn, string? sortDirection);
         Task UpdateBook(Book book);
+        Task<IEnumerable<string>> GetBookLanguages();
     }
 }

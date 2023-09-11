@@ -63,4 +63,11 @@ public class BookRepository : IBookRepository
         await connection.ExecuteAsync("spUpdateBook", book, commandType: CommandType.StoredProcedure);
     }
 
+    public async Task<IEnumerable<string>> GetBookLanguages()
+    {
+        using IDbConnection connection = new SqlConnection(_connectionString);
+        var languages = await connection.QueryAsync<string>("spGetLanguages", commandType: CommandType.StoredProcedure);
+        return languages;
+    }
+
 }

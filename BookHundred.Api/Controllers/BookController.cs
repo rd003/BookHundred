@@ -10,7 +10,7 @@ public class BookController : ControllerBase
 {
     private readonly IBookRepository _bookRepo;
     private readonly ILogger<BookController> _logger;
-    public BookController(IBookRepository bookRepo,ILogger<BookController> logger)
+    public BookController(IBookRepository bookRepo, ILogger<BookController> logger)
     {
         _bookRepo = bookRepo;
         _logger = logger;
@@ -48,7 +48,7 @@ public class BookController : ControllerBase
                 {
                     StatusCode = 404,
                     Message = $"Book with id {book.Id} does not exists."
-                }) ;
+                });
             }
 
 
@@ -57,7 +57,7 @@ public class BookController : ControllerBase
             {
                 StatusCode = 200,
                 Message = "Updated successfully"
-            }); 
+            });
         }
         catch (Exception ex)
         {
@@ -77,7 +77,7 @@ public class BookController : ControllerBase
     {
         try
         {
-            var book = await _bookRepo.GetBook(id);          
+            var book = await _bookRepo.GetBook(id);
             if (book == null)
             {
                 return NotFound(new StatusModel
@@ -140,6 +140,25 @@ public class BookController : ControllerBase
         try
         {
             var books = await _bookRepo.GetBooksAsync(page, limit, searchTerm, languages, sortColumn, sortDirection);
+            return Ok(books);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, new StatusModel
+            {
+                StatusCode = 500,
+                Message = "Oops! something went wrong"
+            });
+        }
+    }
+
+    [HttpGet("languages")]
+    public async Task<IActionResult> GetBookLanguages()
+    {
+        try
+        {
+            var books = await _bookRepo.GetBookLanguages();
             return Ok(books);
         }
         catch (Exception ex)
